@@ -29,4 +29,12 @@ class Request {
     public function getPostVars() {
         return $this->postVars;
     }
+
+    public function getUri() {
+        return $this->uri;
+    }
+
+    public function getHttpMethod() {
+        return $this->httpMethod;
+    }
 }

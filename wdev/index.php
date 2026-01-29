@@ -3,10 +3,14 @@
 require __DIR__ . '/vendor/autoload.php';
 
 use \App\Http\Router;
+use \App\Http\Response;
+
+define('URL', 'http://localhost/vitao');
 
 
+$obj = new Router(URL);
 
-$obj = new Router("");
-print_r($obj);
+// Inclui as rotas
+include __DIR__ . '/routes/pages.php';
 
-echo "hello";
+$obj->run()->sendResponse();
