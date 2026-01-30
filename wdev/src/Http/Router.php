@@ -32,22 +32,24 @@ class Router {
         return end($xUri);
     }
     
-    // Compara os dados da requisição com a lista de rotas e valida ela
+    // PESQUISA NA LISTA DE ROTAS E RETORNA A ROTA CORRETA COM BASE NOS DADOS DA REQUISIÇÃO
+
     private function getRoute() {
-        // URI da requisição
-        $uri = $this->getUri();
         
-        // Método da requisição
+        // Dados da requisição
+        $uri = $this->getUri();
         $httpMethod = $this->request->getHttpMethod();
         
         // VALIDAÇÃO DAS ROTAS
         foreach($this->routes as $patternRoute => $methods) {
             
             // Se a expressão regular encontrar alguma rota correspondente
-            if(preg_match($patternRoute, $uri)) {
+            if(preg_match($patternRoute, $uri, $matches)) {
                 
                 // Se o método dessa rota correspondente for igual ao método da requisição
                 if(isset($methods[$httpMethod])) {
+                    print_r($matches);
+                    exit;
                     return $methods[$httpMethod];
                 }
                 
@@ -80,9 +82,11 @@ class Router {
         }
     }
 
-    // INCLUSÃO DAS ROTAS
+    // INCLUSÃO DAS ROTAS NA LISTA DE ROTAS
 
     private function addRoute($method, $route, $params = []) {
+
+        // Muda o nome da key com a Closure do controller para 'controller'
         foreach($params as $key => $value) {
             if($value instanceof Closure) {
                 $params['controller'] = $value;
@@ -91,7 +95,21 @@ class Router {
             }
         }
 
-        // A rota já é armazenada com a expressão regular
+        // Expressão regular pra extrair os parâmetros das rotas
+        $params['variables'] = [];
+        
+        $patternVariable = '/{(.*?)}/';
+
+        // Retorna as correspondências de tudo que estiver entre chaves {}. Ignora se for nula
+        if(preg_match_all($patternVariable, $route, $matches)){
+            $route = preg_replace($patternVariable, '(.*?)', $route);
+            $params['variables'] = $matches[1];
+            print_r($params['variables']);
+            exit;
+        }
+        
+
+        // Trata a barra e força a processar todo o conteúdo da rota
         $patternRoute = '/^' . str_replace('/', '\/', $route) . '$/';
 
         $this->routes[$patternRoute][$method] = $params;
