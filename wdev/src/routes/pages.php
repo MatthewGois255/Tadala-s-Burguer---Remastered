@@ -9,8 +9,8 @@ $obj->get('/usuario/{id}', [
     }
 ]);
 
-$obj->get('/saopaulo', [
-    function() {
+$obj->get('/saopaulo/{id}', [
+    function($id) {
         return new Response(200, Pages\Home::getHome());
     }
 ]);

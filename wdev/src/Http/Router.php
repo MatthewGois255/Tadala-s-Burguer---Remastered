@@ -4,6 +4,7 @@ namespace App\Http;
 
 use \Closure;
 use \Exception;
+use \ReflectionFunction;
 
 class Router {
     private $url = '';
@@ -48,8 +49,16 @@ class Router {
                 
                 // Se o método dessa rota correspondente for igual ao método da requisição
                 if(isset($methods[$httpMethod])) {
-                    print_r($matches);
-                    exit;
+                    unset($matches[0]);
+                    
+                    // Combinar o nome do parâmetro que passamos ao adicionar a rota com o valor passado na URI
+                    $keys = $methods[$httpMethod]['variables'];
+                    
+                    // VARIÁVEIS TRATADAS
+                    $methods[$httpMethod]['variables'] = array_combine($keys, $matches);
+                    $methods[$httpMethod]['variables']['request'] = $this->request;
+                    
+
                     return $methods[$httpMethod];
                 }
                 
@@ -65,7 +74,7 @@ class Router {
     public function run() {
         try{
             $route = $this->getRoute();
-            
+
             // Verifica o controlador
             if(!isset($route['controller'])) {
                 throw new Exception("O Vitão esqueceu de criar o controller", 500);
@@ -73,6 +82,17 @@ class Router {
             
             $args = [];
 
+            $reflection = new ReflectionFunction($route['controller']);
+
+            foreach($reflection->getParameters() as $parameter) {
+                // Pega o nome do parâmetro passado na Closure
+                $name = $parameter->getName();
+
+                // Com base nesse nome, acessamos o valor pelo array de variáveis do $route
+                $args[$name] = $route['variables'][$name] ?? '';
+                
+            }
+            
             return call_user_func_array($route['controller'], $args);
             
         } catch(Exception $e) {
@@ -104,8 +124,6 @@ class Router {
         if(preg_match_all($patternVariable, $route, $matches)){
             $route = preg_replace($patternVariable, '(.*?)', $route);
             $params['variables'] = $matches[1];
-            print_r($params['variables']);
-            exit;
         }
         
 
