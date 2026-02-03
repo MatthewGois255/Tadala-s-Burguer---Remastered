@@ -3,14 +3,14 @@
 use \App\Http\Response;
 use \App\Controllers\Pages;
 
-$obj->get('/usuario/{id}', [
+$router->get('/usuario/{id}', [
     function($id) {
-        return new Response(200, 'Usuário ' . $id);
+        return new Response(200, Pages\Usuario::getUsuario($id));
     }
 ]);
 
-$obj->get('/saopaulo/{id}', [
+$router->get('/saopaulo/{id}', [
     function($id) {
-        return new Response(200, Pages\Home::getHome());
+        return new Response(200, Pages\Home::getHome($id));
     }
 ]);
