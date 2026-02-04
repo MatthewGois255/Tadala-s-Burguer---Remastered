@@ -96,8 +96,6 @@ class Router {
 
             // Execução da fila de middlewares
             return (new MiddlewareQueue($route['middlewares'], $route['controller'], $args))->next($this->request);
-
-            // return call_user_func_array($route['controller'], $args);
             
         } catch(Exception $e) {
             

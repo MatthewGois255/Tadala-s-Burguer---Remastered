@@ -8,6 +8,7 @@ $router = new Router(URL);
 
 // Inclui as rotas
 include __DIR__ . '/src/routes/pages.php';
+include __DIR__ . '/src/routes/admin.php';
 
 $router ->run()
         ->sendResponse();

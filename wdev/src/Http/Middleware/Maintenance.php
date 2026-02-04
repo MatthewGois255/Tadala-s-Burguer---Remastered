@@ -4,7 +4,12 @@ namespace App\Http\Middleware;
 
 class Maintenance {
     public function handle ($request, $next) {
-        print_r($request);
-        exit;
+
+        // Verifica o estado de manutenção da página
+        if(getenv('MAINTENANCE') == 'true') {
+            throw new \Exception("Página em manutenção. Tente novamente mais tarde.", 200);
+        }
+        
+        return $next($request);
     }
 }

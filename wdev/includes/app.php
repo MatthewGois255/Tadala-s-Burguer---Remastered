@@ -15,8 +15,12 @@ View::init([
     'URL' => URL
 ]);
 
-// Define o mapeamento de middlewares
+// Mapeia o apelido do middleware à sua classe
 
 MiddlewareQueue::setMap([
     'maintenance' => \App\Http\Middleware\Maintenance::class
+]);
+
+MiddlewareQueue::setDefault([
+    'maintenance'
 ]);
