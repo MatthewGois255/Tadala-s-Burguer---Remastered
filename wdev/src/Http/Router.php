@@ -33,6 +33,14 @@ class Router {
         // Retorna a URI sem o prefixo
         return end($xUri);
     }
+
+    // Redireciona a URL
+    public function redirect($route) {
+        $url = $this->url . $route;
+
+        header('Location: ' . $url);
+        exit;
+    }
     
     // PESQUISA NA LISTA DE ROTAS E RETORNA A ROTA CORRETA COM BASE NOS DADOS DA REQUISIÇÃO
 

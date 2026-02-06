@@ -3,4 +3,4 @@ RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
-RewriteRule ^(.*)$ ./wdev/index.php?url=$1 [QSA,NC]
+RewriteRule ^(.*)$ ./rotanova/index.php?url=$1 [QSA,NC]
